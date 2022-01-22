@@ -24,6 +24,14 @@ var app = (function () {
     function safe_not_equal(a, b) {
         return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
     }
+    let src_url_equal_anchor;
+    function src_url_equal(element_src, url) {
+        if (!src_url_equal_anchor) {
+            src_url_equal_anchor = document.createElement('a');
+        }
+        src_url_equal_anchor.href = url;
+        return element_src === src_url_equal_anchor.href;
+    }
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
     }
@@ -50,6 +58,14 @@ var app = (function () {
             node.removeAttribute(attribute);
         else if (node.getAttribute(attribute) !== value)
             node.setAttribute(attribute, value);
+    }
+    function set_custom_element_data(node, prop, value) {
+        if (prop in node) {
+            node[prop] = typeof node[prop] === 'boolean' && value === '' ? true : value;
+        }
+        else {
+            attr(node, prop, value);
+        }
     }
     function children(element) {
         return Array.from(element.childNodes);
@@ -301,13 +317,6 @@ var app = (function () {
         else
             dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
     }
-    function set_data_dev(text, data) {
-        data = '' + data;
-        if (text.wholeText === data)
-            return;
-        dispatch_dev('SvelteDOMSetData', { node: text, data });
-        text.data = data;
-    }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
             if (!~keys.indexOf(slot_key)) {
@@ -340,60 +349,84 @@ var app = (function () {
     const file = "src\\App.svelte";
 
     function create_fragment(ctx) {
-    	let main;
-    	let h1;
+    	let video_1;
     	let t0;
+    	let a_scene;
+    	let a_entity;
+    	let a_torus;
     	let t1;
+    	let a_plane;
+    	let a_plane_src_value;
     	let t2;
-    	let t3;
-    	let p;
-    	let t4;
-    	let a;
-    	let t6;
+    	let a_cone;
 
     	const block = {
     		c: function create() {
-    			main = element("main");
-    			h1 = element("h1");
-    			t0 = text("Hello ");
-    			t1 = text(/*name*/ ctx[0]);
-    			t2 = text("!");
-    			t3 = space();
-    			p = element("p");
-    			t4 = text("Visit the ");
-    			a = element("a");
-    			a.textContent = "Svelte tutorial";
-    			t6 = text(" to learn how to build Svelte apps.");
-    			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 5, 1, 46);
-    			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 6, 14, 83);
-    			add_location(p, file, 6, 1, 70);
-    			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 4, 0, 38);
+    			video_1 = element("video");
+    			t0 = space();
+    			a_scene = element("a-scene");
+    			a_entity = element("a-entity");
+    			a_torus = element("a-torus");
+    			t1 = space();
+    			a_plane = element("a-plane");
+    			t2 = space();
+    			a_cone = element("a-cone");
+    			video_1.autoplay = true;
+    			attr_dev(video_1, "width", "100%");
+    			attr_dev(video_1, "height", "100%");
+    			add_location(video_1, file, 14, 0, 192);
+    			set_custom_element_data(a_torus, "scale", "0.6 0.6 0.6");
+    			set_custom_element_data(a_torus, "position", "0 0.173 -0.1");
+    			set_custom_element_data(a_torus, "color", "#43A367");
+    			set_custom_element_data(a_torus, "radius", "0.25");
+    			set_custom_element_data(a_torus, "radius-tubular", "0.005");
+    			add_location(a_torus, file, 18, 2, 341);
+    			set_custom_element_data(a_plane, "scale", "0.6 0.6 0.6");
+    			set_custom_element_data(a_plane, "position", "0 0 -0.3");
+    			set_custom_element_data(a_plane, "rotation", "-90 0 0");
+    			set_custom_element_data(a_plane, "width", "0.9");
+    			set_custom_element_data(a_plane, "height", "0.9");
+    			set_custom_element_data(a_plane, "material", "transparent: true; side: double;");
+    			if (!src_url_equal(a_plane.src, a_plane_src_value = "./backboard.png")) set_custom_element_data(a_plane, "src", a_plane_src_value);
+    			add_location(a_plane, file, 19, 2, 461);
+    			set_custom_element_data(a_cone, "scale", "0.6 0.6 0.6");
+    			set_custom_element_data(a_cone, "position", "0 0.173 -0.010");
+    			set_custom_element_data(a_cone, "color", "tomato");
+    			set_custom_element_data(a_cone, "radius-bottom", "0.25");
+    			set_custom_element_data(a_cone, "radius-top", "0.3");
+    			set_custom_element_data(a_cone, "material", "side: double; opacity:0.5; transparent: true;");
+    			set_custom_element_data(a_cone, "geometry", "height: 0.29; openEnded: true");
+    			set_custom_element_data(a_cone, "rotation", "90 0 0");
+    			add_location(a_cone, file, 28, 2, 666);
+    			set_custom_element_data(a_entity, "id", "hoop");
+    			set_custom_element_data(a_entity, "rotation", "90 0 0");
+    			set_custom_element_data(a_entity, "position", "0 2 -1.8");
+    			add_location(a_entity, file, 17, 1, 278);
+    			add_location(a_scene, file, 16, 0, 265);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, main, anchor);
-    			append_dev(main, h1);
-    			append_dev(h1, t0);
-    			append_dev(h1, t1);
-    			append_dev(h1, t2);
-    			append_dev(main, t3);
-    			append_dev(main, p);
-    			append_dev(p, t4);
-    			append_dev(p, a);
-    			append_dev(p, t6);
+    			insert_dev(target, video_1, anchor);
+    			/*video_1_binding*/ ctx[1](video_1);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, a_scene, anchor);
+    			append_dev(a_scene, a_entity);
+    			append_dev(a_entity, a_torus);
+    			append_dev(a_entity, t1);
+    			append_dev(a_entity, a_plane);
+    			append_dev(a_entity, t2);
+    			append_dev(a_entity, a_cone);
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (dirty & /*name*/ 1) set_data_dev(t1, /*name*/ ctx[0]);
-    		},
+    		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(main);
+    			if (detaching) detach_dev(video_1);
+    			/*video_1_binding*/ ctx[1](null);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(a_scene);
     		}
     	};
 
@@ -411,34 +444,43 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
-    	let { name } = $$props;
-    	const writable_props = ['name'];
+    	let video;
+    	const constraints = { video: true };
+
+    	navigator.mediaDevices.getUserMedia(constraints).then(stream => {
+    		$$invalidate(0, video.srcObject = stream, video);
+    	});
+
+    	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$$set = $$props => {
-    		if ('name' in $$props) $$invalidate(0, name = $$props.name);
-    	};
+    	function video_1_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			video = $$value;
+    			$$invalidate(0, video);
+    		});
+    	}
 
-    	$$self.$capture_state = () => ({ name });
+    	$$self.$capture_state = () => ({ video, constraints });
 
     	$$self.$inject_state = $$props => {
-    		if ('name' in $$props) $$invalidate(0, name = $$props.name);
+    		if ('video' in $$props) $$invalidate(0, video = $$props.video);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [name];
+    	return [video, video_1_binding];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { name: 0 });
+    		init(this, options, instance, create_fragment, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -446,21 +488,6 @@ var app = (function () {
     			options,
     			id: create_fragment.name
     		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*name*/ ctx[0] === undefined && !('name' in props)) {
-    			console.warn("<App> was created without expected prop 'name'");
-    		}
-    	}
-
-    	get name() {
-    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set name(value) {
-    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
